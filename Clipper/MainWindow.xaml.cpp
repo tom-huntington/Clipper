@@ -213,7 +213,9 @@ void winrt::Clipper::implementation::MainWindow::Grid_KeyDown(winrt::Windows::Fo
     using namespace Windows::System;
     switch (e.Key())
     {
-        break; case VirtualKey::J:
+        break;
+        case VirtualKey::J:
+        case VirtualKey::L:
         {
             auto mediaPlayer = mediaPlayerElement().MediaPlayer();
             auto position = mediaPlayer.Position();
@@ -223,8 +225,12 @@ void winrt::Clipper::implementation::MainWindow::Grid_KeyDown(winrt::Windows::Fo
             auto key_state = InputKeyboardSource::GetKeyStateForCurrentThread(VirtualKey::Shift);
             bool isShiftPressed = key_state == CoreVirtualKeyStates::Down;
 
-            auto increment = isShiftPressed ? 2U : 5U;
-            auto new_pos = position - std::chrono::seconds(increment);
+            auto delta = isShiftPressed ? 2U : 5U;
+            auto new_pos = [&]() {
+                if (e.Key() == VirtualKey::J)
+                    return position - std::chrono::seconds(delta);
+                else return position + std::chrono::seconds(delta);
+                }();
             mediaPlayer.Position(new_pos);
         }
         break; case VirtualKey::O:

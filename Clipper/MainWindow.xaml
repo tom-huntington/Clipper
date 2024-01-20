@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="Clipper.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Clipper"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Loaded="Grid_Loaded" KeyDown="Grid_KeyDown">
+        <MediaPlayerElement x:Name="mediaPlayerElement"
+          AreTransportControlsEnabled="True" AutoPlay="True"/>
+        <StackPanel x:Name="PopUp" CornerRadius="4" Padding="4" Orientation="Horizontal" Visibility="Collapsed" VerticalAlignment="Center" HorizontalAlignment="Center" Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
+                <TextBlock Text="Enter clip name:" VerticalAlignment="Center" Margin="0,0,3,0"/>
+                <TextBox x:Name="TextBoxPopup" KeyDown="TextBoxPopup_KeyDown"/>
+
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Orientation="Horizontal">
+            <TextBlock x:Name="DurationTextBlock" VerticalAlignment="Center" />
+            <TextBlock x:Name="PlaybackSpeedTextBlock" Text="&#xD7;1" VerticalAlignment="Center" Margin="3,0" ToolTipService.ToolTip="Playback Speed"/>
+            <Button x:Name="PickFolderButton" Click="Button_Click" >
+                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8B7;" />
+            </Button>
+        </StackPanel>
+        <TeachingTip x:Name="Notification"
+    />
+    </Grid>
+</Window>

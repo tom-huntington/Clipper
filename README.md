@@ -23,3 +23,4 @@ Use `S`/`E` then `L`/`J` to re-adjust clip start and end.
 | L     | Jump backward x seconds                         |
 | Esc   | Exit finalize prompt/Bring focus off media controls |
 | Enter | Enter finalize prompt                           |
+| K | Play/Pause                                          |

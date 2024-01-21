@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Loaded="Grid_Loaded" KeyDown="Grid_KeyDown">
+    <Grid x:Name="RootGrid" Loaded="Grid_Loaded" KeyDown="Grid_KeyDown">
         <MediaPlayerElement x:Name="mediaPlayerElement"
           AreTransportControlsEnabled="True" AutoPlay="True"/>
         <StackPanel x:Name="PopUp" CornerRadius="4" Padding="4" Orientation="Horizontal" Visibility="Collapsed" VerticalAlignment="Center" HorizontalAlignment="Center" Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">

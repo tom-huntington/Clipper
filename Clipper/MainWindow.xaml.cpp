@@ -214,6 +214,19 @@ void winrt::Clipper::implementation::MainWindow::Grid_KeyDown(winrt::Windows::Fo
     using namespace Windows::System;
     switch (e.Key())
     {
+        break; case VirtualKey::K:
+        {
+            auto mediaPlayer = mediaPlayerElement().MediaPlayer();
+            using namespace winrt::Windows::Media::Playback;
+            if (mediaPlayer.PlaybackSession().PlaybackState() == MediaPlaybackState::Playing)
+            {
+                mediaPlayer.Pause();
+            }
+            else
+            {
+                mediaPlayer.Play();
+            }
+        }
         break;
         case VirtualKey::J:
         case VirtualKey::L:

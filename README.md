@@ -15,7 +15,7 @@ Use `S`/`E` then `L`/`J` to re-adjust clip start and end.
 | Key   | Function                                        |
 |-------|-------------------------------------------------|
 | I     | Mark In (clip start)                            |
-| O     | Mark Out (clip end) and enter finalize prompt  |
+| O     | Mark Out (clip end)                             |
 | S     | Jump to In/start marker                         |
 | E     | Jump to Out/end marker                          |
 | H     | Jump to furthest position watched               |

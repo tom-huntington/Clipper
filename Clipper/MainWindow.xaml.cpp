@@ -248,7 +248,9 @@ void winrt::Clipper::implementation::MainWindow::Grid_KeyDown(winrt::Windows::Fo
         break; case VirtualKey::I:
         {
             m_start = mediaPlayerElement().MediaPlayer().Position();
-            FlashNotification(L"Clip start selected");
+            //FlashNotification(L"Clip start selected");
+            e.Handled(true);
+            ShowTextBox();
         }
         break;
         case static_cast<VirtualKey>(190):

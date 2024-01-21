@@ -97,6 +97,7 @@ winrt::fire_and_forget winrt::Clipper::implementation::MainWindow::Grid_Loaded(w
     initializeWithWindow->Initialize(hWnd);
     picker.SuggestedStartLocation(PickerLocationId::VideosLibrary);
     picker.FileTypeFilter().Append(L".mp4");
+    picker.CommitButtonText(L"Clip this file");
     m_file = co_await picker.PickSingleFileAsync();
 
     if (!m_file)

@@ -40,7 +40,7 @@ winrt::Clipper::implementation::MainWindow::MainWindow()
 
 auto durationToString(const winrt::Windows::Foundation::TimeSpan& duration) {
     using namespace std::chrono;
-
+#if 0
     // Convert duration to minutes and seconds
     auto minutes = duration_cast<std::chrono::minutes>(duration);
     auto seconds = duration_cast<std::chrono::seconds>(duration - minutes);
@@ -48,6 +48,18 @@ auto durationToString(const winrt::Windows::Foundation::TimeSpan& duration) {
     // Format minutes and seconds using std::format
     //return winrt::to_hstring(std::format(L"{:02}:{:02}", minutes.count(), seconds.count()));
     return winrt::format(L"{}:{:02}", minutes.count(), seconds.count());
+#endif
+    auto _hours = duration_cast<hours>(duration).count();
+    if (_hours)
+        return winrt::format(L"{}:{:02}:{:02}",
+            _hours,
+            duration_cast<minutes>(duration % hours(1)).count(),
+            duration_cast<seconds>(duration % minutes(1)).count()
+        );
+    return winrt::format(L"{}:{:02}",
+        duration_cast<minutes>(duration % hours(1)).count(),
+        duration_cast<seconds>(duration % minutes(1)).count()
+    );
 }
 
 winrt::fire_and_forget winrt::Clipper::implementation::MainWindow::Grid_Loaded(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e)
@@ -97,6 +109,8 @@ winrt::fire_and_forget winrt::Clipper::implementation::MainWindow::Grid_Loaded(w
     initializeWithWindow->Initialize(hWnd);
     picker.SuggestedStartLocation(PickerLocationId::VideosLibrary);
     picker.FileTypeFilter().Append(L".mp4");
+    picker.FileTypeFilter().Append(L".m4a");
+    picker.FileTypeFilter().Append(L".m4b");
     picker.CommitButtonText(L"Clip this file");
     m_file = co_await picker.PickSingleFileAsync();
 
@@ -136,10 +150,10 @@ winrt::fire_and_forget winrt::Clipper::implementation::MainWindow::Grid_Loaded(w
 
 
     
-#if 1
     mediaPlayerElement().MediaPlayer().PlaybackSession().PositionChanged([=](auto session, auto) {
-        if (not (session.Position() - m_previous_update_pos >= std::chrono::seconds(1))) return;
         m_largest_update_pos = (std::max)(m_largest_update_pos, session.Position());
+#if 0
+        if (not (session.Position() - m_previous_update_pos >= std::chrono::seconds(1))) return;
 
         DispatcherQueue().TryEnqueue(winrt::Microsoft::UI::Dispatching::DispatcherQueuePriority::Low, [=]() {
             if (m_start)
@@ -153,8 +167,8 @@ winrt::fire_and_forget winrt::Clipper::implementation::MainWindow::Grid_Loaded(w
                 DurationTextBlock().Visibility(Visibility::Collapsed);
             }
             });
-        });
 #endif
+        });
 
     Closed([this](auto, auto) {
         auto a = mediaPlayerElement().MediaPlayer().Position();
@@ -250,6 +264,8 @@ void winrt::Clipper::implementation::MainWindow::Grid_KeyDown(winrt::Windows::Fo
         break; case VirtualKey::O:
         {
             m_end = mediaPlayerElement().MediaPlayer().Position();
+            EndTextBlock().Text(durationToString(*m_end));
+            EndTextBlock().Visibility(Visibility::Visible);
             e.Handled(true);
             ShowTextBox();
         }
@@ -261,7 +277,8 @@ void winrt::Clipper::implementation::MainWindow::Grid_KeyDown(winrt::Windows::Fo
         break; case VirtualKey::I:
         {
             m_start = mediaPlayerElement().MediaPlayer().Position();
-            //FlashNotification(L"Clip start selected");
+            StartTextBlock().Text(durationToString(*m_start));
+            StartTextBlock().Visibility(Visibility::Visible);
             e.Handled(true);
             ShowTextBox();
         }
@@ -346,6 +363,8 @@ winrt::fire_and_forget winrt::Clipper::implementation::MainWindow::TextBoxPopup_
     Run_ffmpeg(std::move(o), *m_start, *m_end);
     m_start = std::nullopt;
     m_end = std::nullopt;
+    StartTextBlock().Visibility(Visibility::Collapsed);
+    EndTextBlock().Visibility(Visibility::Collapsed);
 }
 
 std::wstring TimeStamp(winrt::Windows::Foundation::TimeSpan timeStamp)
@@ -523,6 +542,8 @@ void winrt::Clipper::implementation::MainWindow::RunProcess(std::wstring_view  c
         dialog.Content(winrt::box_value(scrollViewer));
         dialog.ShowAsync();
     }
+
+    CloseHandle(g_hChildStd_OUT_Rd);
 }
 
 

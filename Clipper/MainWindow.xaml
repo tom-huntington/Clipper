@@ -17,7 +17,8 @@
 
             </StackPanel>
             <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Orientation="Horizontal">
-            <TextBlock x:Name="DurationTextBlock" VerticalAlignment="Center" />
+            <TextBlock x:Name="StartTextBlock" VerticalAlignment="Center" />
+            <TextBlock x:Name="EndTextBlock" VerticalAlignment="Center" Margin="3,0,0,0" />
             <TextBlock x:Name="PlaybackSpeedTextBlock" Text="&#xD7;1" VerticalAlignment="Center" Margin="3,0" ToolTipService.ToolTip="Playback Speed"/>
             <Button x:Name="PickFolderButton" Click="Button_Click" >
                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8B7;" />

@@ -14,9 +14,12 @@
         <StackPanel x:Name="PopUp" CornerRadius="4" Padding="4" Orientation="Horizontal" Visibility="Collapsed" VerticalAlignment="Center" HorizontalAlignment="Center" Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
                 <TextBlock Text="Enter clip name:" VerticalAlignment="Center" Margin="0,0,3,0"/>
                 <TextBox x:Name="TextBoxPopup" KeyDown="TextBoxPopup_KeyDown"/>
-
-            </StackPanel>
-            <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Orientation="Horizontal">
+        </StackPanel>
+        <StackPanel x:Name="PopUp2" CornerRadius="4" Padding="4" Orientation="Horizontal" Visibility="Collapsed" VerticalAlignment="Center" HorizontalAlignment="Center" Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
+                <TextBlock Text="Enter Time:" VerticalAlignment="Center" Margin="0,0,3,0"/>
+                <TextBox x:Name="TextBoxPopup2" KeyDown="TextBoxPopup2_KeyDown"/>
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Orientation="Horizontal">
             <TextBlock x:Name="StartTextBlock" VerticalAlignment="Center" />
             <TextBlock x:Name="EndTextBlock" VerticalAlignment="Center" Margin="3,0,0,0" />
             <TextBlock x:Name="PlaybackSpeedTextBlock" Text="&#xD7;1" VerticalAlignment="Center" Margin="3,0" ToolTipService.ToolTip="Playback Speed"/>

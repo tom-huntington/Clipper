@@ -9,6 +9,7 @@ namespace winrt::Clipper::implementation
         MainWindow();
 
         winrt::fire_and_forget TextBoxPopup_KeyDown(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::Input::KeyRoutedEventArgs const& e);
+        winrt::fire_and_forget TextBoxPopup2_KeyDown(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::Input::KeyRoutedEventArgs const& e);
         winrt::fire_and_forget Grid_Loaded(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e);
 
         //std::optional<uint32_t> m_start_position;

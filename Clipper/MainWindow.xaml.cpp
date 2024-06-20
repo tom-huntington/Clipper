@@ -227,7 +227,8 @@ void winrt::Clipper::implementation::MainWindow::ShowTextBox()
 void winrt::Clipper::implementation::MainWindow::Grid_KeyDown(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::Input::KeyRoutedEventArgs const& e)
 {
     using namespace Windows::System;
-    switch (e.Key())
+    auto k_ = e.Key();
+    switch (k_)
     {
         break; case VirtualKey::K:
         {
@@ -320,6 +321,12 @@ void winrt::Clipper::implementation::MainWindow::Grid_KeyDown(winrt::Windows::Fo
         {
             Content().Focus(FocusState::Programmatic);
         }
+        break; case static_cast<VirtualKey>(191): // the '/' key
+        {
+            e.Handled(true);
+            PopUp2().Visibility(Visibility::Visible);
+            TextBoxPopup2().Focus(FocusState::Programmatic);
+        }
     }
 
 
@@ -333,6 +340,31 @@ void winrt::Clipper::implementation::MainWindow::RevertToClippingState()
     Content().Focus(FocusState::Programmatic);
 }
 
+winrt::fire_and_forget winrt::Clipper::implementation::MainWindow::TextBoxPopup2_KeyDown(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::Input::KeyRoutedEventArgs const& e)
+{
+    e.Handled(true);
+    if (e.Key() == Windows::System::VirtualKey::Escape)
+    {
+        PopUp2().Visibility(Visibility::Collapsed);
+        TextBoxPopup2().Text(L"");
+        co_return;
+    }
+
+    if (e.Key() not_eq Windows::System::VirtualKey::Enter) co_return;
+    unsigned minutes, seconds;
+    wchar_t colon;
+    std::wistringstream iss(TextBoxPopup2().Text().c_str());
+    iss >> minutes >> colon >> seconds;
+    if (colon not_eq L':' or not iss.eof()) co_return;
+
+    auto time = std::chrono::seconds(seconds) + std::chrono::minutes(minutes);
+
+    PopUp2().Visibility(Visibility::Collapsed);
+    mediaPlayerElement().MediaPlayer().Position(time);
+    Content().Focus(FocusState::Programmatic);
+    //TextBoxPopup2().Text(L"");
+
+}
 winrt::fire_and_forget winrt::Clipper::implementation::MainWindow::TextBoxPopup_KeyDown(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::Input::KeyRoutedEventArgs const& e)
 {
     using namespace Windows::System;

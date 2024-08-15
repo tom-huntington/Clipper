@@ -40,26 +40,7 @@ winrt::Clipper::implementation::MainWindow::MainWindow()
 
 auto durationToString(const winrt::Windows::Foundation::TimeSpan& duration) {
     using namespace std::chrono;
-#if 0
-    // Convert duration to minutes and seconds
-    auto minutes = duration_cast<std::chrono::minutes>(duration);
-    auto seconds = duration_cast<std::chrono::seconds>(duration - minutes);
-
-    // Format minutes and seconds using std::format
-    //return winrt::to_hstring(std::format(L"{:02}:{:02}", minutes.count(), seconds.count()));
-    return winrt::format(L"{}:{:02}", minutes.count(), seconds.count());
-#endif
-    auto _hours = duration_cast<hours>(duration).count();
-    if (_hours)
-        return winrt::format(L"{}:{:02}:{:02}",
-            _hours,
-            duration_cast<minutes>(duration % hours(1)).count(),
-            duration_cast<seconds>(duration % minutes(1)).count()
-        );
-    return winrt::format(L"{}:{:02}",
-        duration_cast<minutes>(duration % hours(1)).count(),
-        duration_cast<seconds>(duration % minutes(1)).count()
-    );
+    return std::format(L"{:%H:%M:%S}", duration);
 }
 
 winrt::fire_and_forget winrt::Clipper::implementation::MainWindow::Grid_Loaded(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e)
@@ -266,6 +247,7 @@ void winrt::Clipper::implementation::MainWindow::Grid_KeyDown(winrt::Windows::Fo
         break; case VirtualKey::O:
         {
             m_end = mediaPlayerElement().MediaPlayer().Position();
+            auto e_ = std::chrono::duration<double>(*m_end);
             EndTextBlock().Text(durationToString(*m_end));
             EndTextBlock().Visibility(Visibility::Visible);
             e.Handled(true);
@@ -400,24 +382,11 @@ winrt::fire_and_forget winrt::Clipper::implementation::MainWindow::TextBoxPopup_
     EndTextBlock().Visibility(Visibility::Collapsed);
 }
 
-std::wstring TimeStamp(winrt::Windows::Foundation::TimeSpan timeStamp)
-{
-    auto position = timeStamp;
-    //auto count = position.count();
-    //auto total_seconds = (position.count() / 10000000);
-    auto seconds = (position.count() / 10000000) % 60;
-    //auto total_minutes = (position.count() / (10000000 * 60));
-    auto minutes = (position.count() / (10000000 * 60)) % 60;
-    auto hours = (position.count() / (10000000 * 60)) / 60;
-    //auto hours2 = total_minutes / 60;
-
-    return std::format(L"{:02}:{:02}:{:02}", hours, minutes, seconds);
-}
 
 void winrt::Clipper::implementation::MainWindow::Run_ffmpeg(std::wstringstream o, winrt::Windows::Foundation::TimeSpan start, winrt::Windows::Foundation::TimeSpan end)
 {
-    auto start_timestamp = TimeStamp(start);
-    auto length_timestamp = TimeStamp(end - start + winrt::Windows::Foundation::TimeSpan{ 10000000 / 4 });
+    auto start_timestamp = durationToString(start);
+    auto end_timestamp = durationToString(end);
 
 
     /*std::wstringstream cmdLineVideo;
@@ -448,7 +417,7 @@ void winrt::Clipper::implementation::MainWindow::Run_ffmpeg(std::wstringstream o
     //    }();
     auto outputPath = m_outputFolder.Path();
     winrt::check_bool(not outputPath.empty());
-    auto cmdLineVideo = std::format(L"ffmpeg -ss {} -i \"{}\" -t {} -c copy \"{}\\{}\" ", start_timestamp, m_file.Path(), length_timestamp, outputPath, o.view());
+    auto cmdLineVideo = std::format(L"ffmpeg -ss {} -i \"{}\" -to {} -c copy \"{}\\{}\" ", start_timestamp, m_file.Path(), end_timestamp, outputPath, o.view());
     //OutputDebugString(cmdLineVideo.str().c_str());
 
 

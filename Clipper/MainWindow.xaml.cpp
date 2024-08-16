@@ -417,7 +417,7 @@ void winrt::Clipper::implementation::MainWindow::Run_ffmpeg(std::wstringstream o
     //    }();
     auto outputPath = m_outputFolder.Path();
     winrt::check_bool(not outputPath.empty());
-    auto cmdLineVideo = std::format(L"ffmpeg -ss {} -i \"{}\" -to {} -c copy \"{}\\{}\" ", start_timestamp, m_file.Path(), end_timestamp, outputPath, o.view());
+    auto cmdLineVideo = std::format(L"ffmpeg -ss {} -to {} -i \"{}\" -c copy \"{}\\{}\" ", start_timestamp, end_timestamp, m_file.Path(), outputPath, o.view());
     //OutputDebugString(cmdLineVideo.str().c_str());
 
 
